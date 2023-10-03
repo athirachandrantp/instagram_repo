@@ -1,0 +1,23 @@
+version: "3.2"
+services:
+  app:
+    build: .
+    volumes:
+      - .:/instagram
+    ports:
+      - 8081:8081
+    image: app.instagram
+    container_name: instagram_container
+    command: python manage.py runserver 0.0.0.0:8081
+    depends_on:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - .data/db:/var/lib/postgres/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres_db_instagram
+

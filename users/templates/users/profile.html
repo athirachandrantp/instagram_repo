@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% block content %} <hr>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{profiles.owner}} <br>
+    {{profiles.name}} <br>
+    <img style="max-width: 500px;" src="{{ profiles.profile_photo.url }}"> <br> <br>
+    {{profiles.description}} <br>
+<!--    <input type="submit">-->
+
+    <a href="{% url 'edit-profile' %}">Edit Profile</a>
+
+</form>
+
+
+{% endblock %}
