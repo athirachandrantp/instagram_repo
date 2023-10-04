@@ -1,10 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Posts, likePost
-from .forms import PostForm
+from .models import Posts, likePost, CommentPost
+from .forms import PostForm, CommentForm
 from django.contrib.auth.models import User
-from .utils import searchProfiles
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 
 
@@ -14,9 +11,9 @@ from django.urls import reverse
 def home_page(request):
     # profiles, search_query = searchProfiles(request)
     search_query = ''
+
     if request.GET.get('search_query'):
         search_query = request.GET.get('search_query')
-
     post = Posts.objects.filter(
         post_user__name__icontains=search_query).order_by(
         '-post_created')
@@ -72,3 +69,26 @@ def post_likes(request, pk):
     post.post_likes = current_likes
     post.save()
     return redirect('home')
+
+def user_post(request, pk):
+    posts = Posts.objects.get(id=pk)
+    form = CommentForm()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        comment = form.save(commit=False)
+        comment.posts = posts
+        comment.owner = request.user.profile
+
+        comment.save()
+        return redirect('home')
+
+    context = {'posts': posts, 'form': form}
+    return render(request, 'instaapp/single_post.html', context)
+
+def delete_comment(request, pk):
+    comment = CommentPost.objects.get(id=pk)
+    if comment.owner.owner == request.user.profile:
+        comment.delete()
+        return redirect('home')
+    return render(request, 'instaapp/home')
+

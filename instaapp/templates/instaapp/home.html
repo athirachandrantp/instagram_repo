@@ -1,35 +1,59 @@
 {% extends 'main.html' %}
 {% block content %}
+{% load static %}
 
 <h1>INSTAGRAM</h1>
 
  <div class="hero-section__search">
-                <form id='searchForm' class="form" action="{% url 'home' %}" method="get">
-                    <div class="form__field">
-                        <label for="formInput#search">Search By Projects </label>
-                        <input class="input input--text" id="formInput#search" type="text" name="search_query"
-                               value="{{search_query}}" />
-                    </div>
+     <form id='searchForm' class="form" action="{% url 'home' %}" method="get">
+         <div class="form__field">
+             <label for="formInput#search">Search By Projects </label>
+             <input class="input input--text" id="formInput#search" type="text"
+                    name="search_query" value="{{search_query}}" /></div>
                         <input class="btn btn--sub btn--lg" type="submit" value="Search" />
-                </form>
-            </div><br><hr>
+     </form>
+ </div><br><hr>
 <form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    {% for i in post %} <br>
-    {{ i.post_user}}<br>
-    <img style="max-width: 500px;" src="{{ i.post_image.url }}">
-        {%  if request.user.profile == i.post_user %}
+    {% for post in post %} <br>
+    {{ post.post_user}}<br>
+    {% if post.post_image %}
+        <img style="max-width: 500px;" src="{{ post.post_image.url }}">
+    {% endif %}
+    {% if post.post_video %}
+    <video controls>
+        <source src="{{ post.post_video.url }}" type='video/mp4'>
+        Your browser does not support the video tag.
+    </video>
+    {% endif %}
 
-    <a href="{% url 'update_post' i.id %}">Edit</a> <a href="{% url 'delete_post' i.id %}">Delete</a><br>
+
+    {%  if request.user.profile == post.post_user %}
+    <a href="{% url 'update_post' post.id %}">Edit</a> <a href="{% url 'delete_post' post.id %}">Delete</a><br>
     {% endif %} <br>
-    {{i.post_caption}} <br>
-    {{i.post_created | timesince}} <br>
+    {{post.post_caption}} <br>
+    {{post.post_created | timesince}} <br>
+    <a href="{% url 'post_like' post.id %}">Like</a>
+    {{post.post_likes}}<br> <br>
+    <a  href="{% url 'user_post' post.id %}">Add Comment</a>
+</form>
+{% for comment in post.commentpost_set.all %}
+<div class="commentList">
+    <div class="comment">
+        <a href="">
+            <img class="avatar avatar--md" style="width: 20px;" src="{{ comment.owner.profile_photo.url }}" alt="user" />
+        </a>
+        <div class="comment__details">
+            <p  class="comment__author" style="color: blue">{{comment.owner.name}}</p>
+            <p class="comment__info">{{comment.body}} {{comment.created | timesince }}
+<!--                <a href="{% url 'delete_comment' comment.id %}">delete</a>-->
+            </p>
 
-    <a href="{% url 'post_like' i.id %}">Like</a>
-
-    {{i.post_likes}}<br> <br> <hr>
-
+        </div>
+    </div>
+</div>
     {% endfor %}
-    </form>
+         <hr>
+    {% endfor %}
 {% endblock %}

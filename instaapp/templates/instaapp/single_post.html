@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+{% block content %}
+
+ <div class="comments">
+        <h5 class="project--rating"></h5>
+        <form class="form" action="" method="POST">
+            {% csrf_token %}
+            {% for form in form %}
+
+            <div class="form__field">
+                <label for="formInput#textarea">{{form.label}}</label>
+                {{form}}
+            </div>
+ </div>
+            {% endfor %}
+<button type="submit">Submit</button>
+
+{% endblock %}
