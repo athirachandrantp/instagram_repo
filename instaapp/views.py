@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 
 
 def home_page(request):
-    # profiles, search_query = searchProfiles(request)
     search_query = ''
 
     if request.GET.get('search_query'):
@@ -70,7 +69,7 @@ def post_likes(request, pk):
     post.save()
     return redirect('home')
 
-def user_post(request, pk):
+def comment_post(request, pk):
     posts = Posts.objects.get(id=pk)
     form = CommentForm()
     if request.method == 'POST':
@@ -84,11 +83,19 @@ def user_post(request, pk):
 
     context = {'posts': posts, 'form': form}
     return render(request, 'instaapp/single_post.html', context)
+def show_comment(request, pk):
+    posts = Posts.objects.get(id=pk)
+    context = {'posts': posts}
+    return render(request, 'instaapp/comment_box.html', context)
 
 def delete_comment(request, pk):
     comment = CommentPost.objects.get(id=pk)
-    if comment.owner.owner == request.user.profile:
+    if request.user.profile == comment.owner:
         comment.delete()
         return redirect('home')
-    return render(request, 'instaapp/home')
+    context = {'comment': comment}
+    return render(request, 'instaapp/comment_box.html', context)
+
+
+
 

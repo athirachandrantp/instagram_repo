@@ -1,0 +1,7 @@
+{% extends 'main.html' %}
+{% block content %} <hr>
+{% for follower in followers %}
+<a href="{% url 'single-profile' follower.follower.id %}">{{follower.follower.name}}</a><br>
+{% endfor %}
+
+{% endblock %}

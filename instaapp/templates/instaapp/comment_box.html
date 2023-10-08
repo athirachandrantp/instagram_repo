@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+{% block content %}
+{% load static %}
+
+ {% for comment in posts.commentpost_set.all %}
+                <div class="commentList">
+                    <div class="comment">
+                        <img class="avatar avatar--md" style="width: 20px;
+                        overflow:scroll;" src="{{ comment.owner.profile_photo.url }}" alt="user" />
+                        <div class="comment__details">
+                            <p  class="comment__author" style="color: blue">{{comment.owner.name}}</p>
+                            <p class="comment__info">{{comment.body}} {{comment.created | timesince }}
+                            </p>
+                            {% if request.user.comment == comment.profile.owner %}
+
+                            <a href="{% url 'delete_comment' comment.id %}">delete</a>
+                            {% endif %}
+
+        </div>
+    </div>
+</div>
+    {% endfor %}
+<br> <br><br><br><br>
+{% endblock %}

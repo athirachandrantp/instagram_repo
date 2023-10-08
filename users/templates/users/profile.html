@@ -6,13 +6,42 @@
     {{profiles.owner}} <br>
     {{profiles.name}} <br>
     <img style="max-width: 500px;" src="{{ profiles.profile_photo.url }}"> <br> <br>
-    {{profiles.description}} <br>
-<!--    <input type="submit">-->
+    <h6>Followers:</h6>
+    <a href="{% url 'followers' profiles.id %}">{{profiles.followers.count}}</a>
+    <h6>Following:</h6>
+    <a href="{% url 'following' profiles.id %}">{{profiles.following.count}}</a><br>
+<!--    {{profiles.description}} <br><br><br><br>-->
+<!--     <h6>Followers:</h6>-->
+<!--    {{profiles.followers.count}} <br>-->
+<!--    <h6>Following:</h6>-->
+<!--    {{profiles.following.count}}</a><br>-->
+<!--    <h6>Followers:</h6>-->
+<!--    {{user.followers.count}}-->
+<!--    <h6>Following:</h6>-->
+<!--    {{user.following.count}}<br>-->
+<!--     {% if user != request.user.profile %}-->
+<!--        {% if request.user in user.followers.all %}-->
+<!--    <form action="{% url 'unfollow_user' pk=user.id %}">-->
+<!--        {% csrf_token %}-->
+<!--        <button type="submit">unfollow</button>-->
+<!--    </form>-->
+<!--    {% else %}-->
+<!--    <form action="{% url 'follow_user' pk=user.id %}">-->
+<!--        {% csrf_token %}-->
+<!--        <button type="submit">follow</button>-->
+<!--    </form>-->
+<!--    {% endif %}-->
+<!--    {% endif %}-->
 
-    <a href="{% url 'edit-profile' %}">Edit Profile</a> <br>
+
+<!--    {% for followers in user.profile.following.all %}-->
+<!--     <p>{{followers.name}}mmmm</p>-->
+<!--    {% endfor %}<br>-->
+
+    <a href="{% url 'edit-profile' %}">Edit Profile</a> <br><br><br>
     {{post}}
 
-</form>
+</form><br><br><br>
 
 
 {% endblock %}

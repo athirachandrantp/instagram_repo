@@ -16,9 +16,6 @@ class Profile(models.Model):
                                       upload_to='images/',
                                       default="images/aman.jpeg")
     created = models.DateTimeField(auto_now_add=True)
-
-    followers = models.IntegerField(default=0, null=True, blank=True)
-    following = models.IntegerField(default=0, null=True, blank=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True,
                           editable=False)
 
@@ -26,7 +23,6 @@ class Profile(models.Model):
         return self.name
 
 def createProfile(sender, instance, created, **kwargs):
-    print('profile signal triggered')
     if created:
         user = instance
         profile = Profile.objects.create(
@@ -36,3 +32,10 @@ def createProfile(sender, instance, created, **kwargs):
 
 
 post_save.connect(createProfile, sender=User)
+
+class Follow(models.Model):
+    follower = models.ForeignKey(Profile, related_name='following',
+                                 on_delete=models.CASCADE)
+    followed = models.ForeignKey(Profile, related_name='followers',
+                                 on_delete=models.CASCADE)
+
